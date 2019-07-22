@@ -1,8 +1,8 @@
-package com.luxuan.opengleslibrary.base;
+package com.luxuan.opengles.library.base;
 
 import android.app.Application;
 
-import com.luxuan.opengleslibrary.core.AppCore;
+import com.luxuan.opengles.library.core.AppCore;
 
 public class BaseApplication extends Application {
 

@@ -1,4 +1,4 @@
-package com.luxuan.opengleslibrary.base;
+package com.luxuan.opengles.library.base;
 
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;

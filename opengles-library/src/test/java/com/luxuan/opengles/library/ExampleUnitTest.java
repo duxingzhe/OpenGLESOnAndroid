@@ -1,4 +1,4 @@
-package com.luxuan.opengleslibrary;
+package com.luxuan.opengles.library;
 
 import org.junit.Test;
 

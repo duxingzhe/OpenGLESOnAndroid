@@ -1,4 +1,4 @@
-package com.luxuan.opengleslibrary.core;
+package com.luxuan.opengles.library.core;
 
 import android.app.Application;
 import android.content.res.Resources;
