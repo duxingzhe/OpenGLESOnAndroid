@@ -24,7 +24,7 @@ public class ShaderUtils {
             GLES30.glGetShaderiv(shaderId, GLES30.GL_COMPILE_STATUS, compileStatus, 0);
             if(compileStatus[0]==0){
                 String logInfo=GLES30.glGetShaderInfoLog(shaderId);
-                System.err.println(shaderId);
+                System.err.println(logInfo);
 
                 GLES30.glDeleteShader(shaderId);
                 return 0;
@@ -33,5 +33,33 @@ public class ShaderUtils {
         }else{
             return 0;
         }
+    }
+
+    public static int linkProgram(int vertexShaderId, int fragmentShaderId){
+        final int programId=GLES30.glCreateProgram();
+        if(programId!=0){
+            GLES30.glAttachShader(programId, vertexShaderId);
+            GLES30.glAttachShader(programId, fragmentShaderId);
+            GLES30.glLinkProgram(programId);
+            final int[] linkStatus=new int[1];
+
+            GLES30.glGetProgramiv(programId, GLES30.GL_LINK_STATUS, linkStatus, 0);
+            if(linkStatus[0]==0){
+                String logInfo=GLES30.glGetProgramInfoLog(programId);
+                System.err.println(logInfo);
+                GLES30.glDeleteProgram(programId);
+                return 0;
+            }
+            return programId;
+        }else{
+            return 0;
+        }
+    }
+
+    public static boolean validProgram(int programObjectId){
+        GLES30.glValidateProgram(programObjectId);
+        final int[] programStatus=new int[1];
+        GLES30.glGetProgramiv(programObjectId, GLES30.GL_VALIDATE_STATUS, programStatus, 0);
+        return programStatus[0]!=0;
     }
 }
