@@ -1,4 +1,4 @@
-# OpenGLESOnAndroid
+# OpenGL ES On Android
 
 OpenGL ES demo on Android
 
