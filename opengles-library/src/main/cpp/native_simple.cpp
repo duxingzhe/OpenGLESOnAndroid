@@ -125,3 +125,48 @@ GLint LinkProgram(GLint vertexShader, GLint fragmentShader)
 
     return 0;
 }
+
+JNIEXPORT void JNICALL surfaceCreated(JNIEnv *env, jobject obj)
+{
+    GLint vertexShader= CompileShader(GL_VERTEX_SHADER, VERTEX_SHADER);
+    if(vertexShader==0)
+    {
+        LOGE("loadVertexShader Failed");
+        return;
+    }
+
+    GLint fragmentShader=CompileShader(GL_FRAGMENT_SHADER, FRAGMENT_SHADER);
+    if(fragmentShader==0)
+    {
+        LOGE("loadFragmentShader Failed");
+        return;
+    }
+
+    GLint program=LinkProgram(vertexShader, fragmentShader);
+
+    glUseProgram(program);
+
+    glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+}
+
+JNIEXPORT void JNICALL surfaceChagned(JNIEnv *env, jobject obj, jint width, jint height)
+{
+    glViewport(0, 0, width, height);
+}
+
+JNIEXPORT void JNICALL onDrawFrame(JNIEnv *env, jobject obj)
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, 0, TRIANGLE_VERTICES);
+
+    glEnableVertexAttribArray(0);
+
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1,4,GL_FLOAT, false, 0, color);
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+}
