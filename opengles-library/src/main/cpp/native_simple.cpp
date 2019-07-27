@@ -29,7 +29,7 @@ JNINativeMethod methods[]=
 
 jint registerNativeMethod(JNIEnv *env)
 {
-    jclass cl=env->FindClass("com/luxuan/opengles/library/simple/base/NativeSimpleRenderer");
+    jclass cl=env->FindClass("com/luxuan/opengles/library/simple/basis/NativeSimpleRenderer");
     if((env->RegisterNatives(cl, methods, sizeof(methods)/sizeof(methods[0])))<0)
     {
         return -1;
