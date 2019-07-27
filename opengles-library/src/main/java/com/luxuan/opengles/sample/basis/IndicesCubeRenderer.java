@@ -3,6 +3,8 @@ package com.luxuan.opengles.sample.basis;
 
 import android.opengl.GLSurfaceView;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
@@ -62,4 +64,21 @@ public class IndicesCubeRenderer implements GLSurfaceView.Renderer {
             0.6f, 0.5f, 0.4f, 1f,   //V6
             0.6f, 0.5f, 0.4f, 1f    //V7
     };
+
+    public IndicesCubeRenderer(){
+        vertexBuffer = ByteBuffer.allocateDirect(vertexPoints.length*4).order(ByteOrder.nativeOrder())
+                .asFloatBuffer();
+        vertexBuffer.put(vertexPoints);
+        vertexBuffer.position(0);
+
+        colorBuffer=ByteBuffer.allocateDirect(colors.length*4).order(ByteOrder.nativeOrder())
+                .asFloatBuffer();
+        colorBuffer.put(colors);
+        colorBuffer.position(0);
+
+        indicesBuffer=ByteBuffer.allocateDirect(indices.length*4).order(ByteOrder.nativeOrder())
+                .asShortBuffer();
+        indicesBuffer.put(indices);
+        indicesBuffer.position(0);
+    }
 }
