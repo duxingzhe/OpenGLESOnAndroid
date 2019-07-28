@@ -1,10 +1,16 @@
 package com.luxuan.opengles.sample.basis;
 
+import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
+
+import com.luxuan.opengles.library.utils.ShaderUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
 
 public class SimpleRenderer implements GLSurfaceView.Renderer {
 
@@ -64,5 +70,39 @@ public class SimpleRenderer implements GLSurfaceView.Renderer {
 
         colorBuffer.put(color);
         colorBuffer.position(0);
+    }
+
+    @Override
+    public void onSurfaceCreated(GL10 gl, EGLConfig config){
+        GLES30.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+
+        final int vertexShaderId= ShaderUtils.compileVertexShader(vertextShader);
+        final int fragmentShaderId=ShaderUtils.compileVertexShader(fragmentShader);
+
+        mProgram=ShaderUtils.linkProgram(vertexShaderId, fragmentShaderId);
+
+        GLES30.glUseProgram(mProgram);
+    }
+
+    @Override
+    public void onSurfaceChanged(GL10 gl, int width, int height){
+        GLES30.glViewport(0, 0, width, height);
+    }
+
+    @Override
+    public void onDrawFrame(GL10 gl){
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
+
+        GLES30.glVertexAttribPointer(0, POSITION_COMPONENT_COUNT, GLES30.GL_FLOAT, false, 0, vertexBuffer);
+
+        GLES30.glEnableVertexAttribArray(0);
+
+        GLES30.glEnableVertexAttribArray(1);
+        GLES30.glVertexAttribPointer(1,4,GLES30.GL_FLOAT, false, 0, colorBuffer);
+
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, 3);
+
+        GLES30.glDisableVertexAttribArray(0);
+        GLES30.glDisableVertexAttribArray(1);
     }
 }
