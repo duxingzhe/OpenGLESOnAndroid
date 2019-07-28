@@ -2,6 +2,7 @@ package com.luxuan.opengles.sample.basis;
 
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
+import android.opengl.Matrix;
 
 import com.luxuan.opengles.library.utils.ShaderUtils;
 
@@ -104,5 +105,31 @@ public class RectangleRenderer implements GLSurfaceView.Renderer {
         GLES30.glVertexAttribPointer(aColorLocation, COLOR_COMPONENT_COUNT, GLES30.GL_FLOAT, false, STRIDE, vertexBuffer);
         GLES30.glEnableVertexAttribArray(aColorLocation);
 
+    }
+
+    @Override
+    public void onSurfaceChanged(GL10 gl, int width, int height){
+        GLES30.glViewport(0,0,width,height);
+
+        final float aspectRatio=width>height?
+                (float)width/(float)height:
+                (float)height/(float)width;
+
+        if(width>height){
+            Matrix.orthoM(mMatrix, 0, -aspectRatio, aspectRatio, -1f, 1f,-1f,1f);
+        }else{
+            Matrix.orthoM(mMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f);
+        }
+    }
+
+    @Override
+    public void onDrawFrame(GL10 gl){
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
+
+        GLES30.glUniformMatrix4fv(uMatrixLocation, 1, false, mMatrix,0);
+
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, 0);
+
+        GLES30.glDrawArrays(GLES30.GL_POINTS, 6, 2);
     }
 }
