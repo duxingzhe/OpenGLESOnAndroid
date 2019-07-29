@@ -1,6 +1,17 @@
 package com.luxuan.opengles.Activity;
 
-import com.luxuan.opengles.library.base.AbstractBaseActivity;
+import android.opengl.GLSurfaceView;
 
-public class SimpleActivity extends AbstractBaseActivity {
+import com.alibaba.android.arouter.facade.annotation.Route;
+import com.luxuan.opengles.Router.table.RouterTable;
+import com.luxuan.opengles.library.base.AbstractGLSurfaceActivity;
+import com.luxuan.opengles.sample.basis.IndicesCubeRenderer;
+
+@Route(path = RouterTable.PAGE_BASIS)
+public class SimpleActivity extends AbstractGLSurfaceActivity {
+
+    @Override
+    public GLSurfaceView.Renderer bindRenderer(){
+        return new IndicesCubeRenderer();
+    }
 }

@@ -3,7 +3,7 @@ package com.luxuan.opengles.library.base;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 
-public abstract class AbstracctGLSurfaceActivity extends AbstractBaseActivity {
+public abstract class AbstractGLSurfaceActivity extends AbstractBaseActivity {
 
     private GLSurfaceView mGLSurfaceView;
 
