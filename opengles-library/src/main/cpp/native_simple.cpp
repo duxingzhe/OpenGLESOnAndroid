@@ -149,7 +149,7 @@ JNIEXPORT void JNICALL surfaceCreated(JNIEnv *env, jobject obj)
     glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
 }
 
-JNIEXPORT void JNICALL surfaceChagned(JNIEnv *env, jobject obj, jint width, jint height)
+JNIEXPORT void JNICALL surfaceChanged(JNIEnv *env, jobject obj, jint width, jint height)
 {
     glViewport(0, 0, width, height);
 }
