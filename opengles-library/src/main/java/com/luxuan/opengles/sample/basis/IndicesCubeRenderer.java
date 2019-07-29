@@ -95,7 +95,7 @@ public class IndicesCubeRenderer implements GLSurfaceView.Renderer {
         GLES30.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
 
         final int vertexShaderId= ShaderUtils.compileVertexShader(ResReadUtils.readResource(R.raw.vertex_colorcube_shader));
-        final int fragmentShaderId= ShaderUtils.compileVertexShader(ResReadUtils.readResource(R.raw.fragment_colorcube_shader));
+        final int fragmentShaderId= ShaderUtils.compileFragmentShader(ResReadUtils.readResource(R.raw.fragment_colorcube_shader));
 
         mProgram=ShaderUtils.linkProgram(vertexShaderId, fragmentShaderId);
 

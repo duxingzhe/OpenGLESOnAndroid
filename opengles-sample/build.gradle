@@ -10,6 +10,13 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
+
     }
     buildTypes {
         release {
@@ -28,7 +35,10 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    implementation 'com.alibaba:arouter-api:1.4.0'
+    implementation ('com.alibaba:arouter-api:1.4.0'){
+        exclude group: 'com.android.support'
+    }
+    annotationProcessor 'com.alibaba:arouter-compiler:1.2.2'
 
     implementation project(':opengles-library')
 }
