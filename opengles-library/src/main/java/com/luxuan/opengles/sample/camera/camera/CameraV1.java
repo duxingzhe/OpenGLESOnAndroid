@@ -1,10 +1,13 @@
 package com.luxuan.opengles.sample.camera.camera;
 
 import android.app.Activity;
+import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.view.Surface;
 
 import com.luxuan.opengles.sample.camera.api.ICamera;
+
+import java.io.IOException;
 
 public class CameraV1 implements ICamera {
 
@@ -40,6 +43,27 @@ public class CameraV1 implements ICamera {
                 mCamera.stopPreview();
             }
         }
+    }
+
+    @Override
+    public void setPreviewTexture(SurfaceTexture surfaceTexture){
+        if(mCamera!=null){
+            try{
+                mCamera.setPreviewTexture(surfaceTexture);
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void closeCamera(){
+        if(mCamera!=null){
+            mCamera.release();
+            mCamera=null;
+        }
+
+        mActivity=null;
     }
 
     private void setCameraDisplayOrientation(Activity activity, int cameraId, Camera camera){
