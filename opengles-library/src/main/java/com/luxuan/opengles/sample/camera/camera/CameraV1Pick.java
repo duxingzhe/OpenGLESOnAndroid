@@ -11,7 +11,7 @@ import com.luxuan.opengles.sample.camera.api.ICamera;
 
 public class CameraV1Pick implements TextureView.SurfaceTextureListener {
 
-    private static int final String TAG="CameraV1Pick";
+    private final static String TAG="CameraV1Pick";
 
     private TextureView mTextureView;
 
@@ -49,5 +49,26 @@ public class CameraV1Pick implements TextureView.SurfaceTextureListener {
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height){
         mTextureEglHelper.onSurfaceChanged(width, height);
+    }
+
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface){
+        if(mCamera!=null){
+            mCamera.enablePreview(false);
+            mCamera.closeCamera();
+            mCamera=null;
+        }
+        return true;
+    }
+
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surface){
+
+    }
+
+    public void onDestroy(){
+        if(mTextureEglHelper!=null){
+            mTextureEglHelper.onDestroy();
+        }
     }
 }
