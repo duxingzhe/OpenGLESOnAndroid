@@ -1,9 +1,13 @@
 package com.luxuan.opengles.sample.camera.renderer;
 
+import android.app.Activity;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.opengl.GLSurfaceView;
+import android.view.Surface;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
@@ -67,4 +71,55 @@ public class CameraSurfaceRenderer implements GLSurfaceView.Renderer{
 
     private int uTextureSamplerLocation;
 
+    public CameraSurfaceRenderer(GLSurfaceView glSurfaceView){
+        mCameraId=Camera.CameraInfo.CAMERA_FACING_FRONT;
+        mGLSurfaceView=glSurfaceView;
+        mCamera=Camera.open(mCameraId);
+        setCameraDisplayOrientation(mCameraId, mCamera);
+
+        vertexBuffer= ByteBuffer.allocateDirect(POSITION_VERTEX.length * 4).order(ByteOrder.nativeOrder())
+                .asFloatBuffer();
+        vertexBuffer.put(POSITION_VERTEX);
+        vertexBuffer.position(0);
+
+        mTexVertexBuffer=ByteBuffer.allocateDirect(VERTEX_INDEX.length *4 ).order(ByteOrder.nativeOrder())
+                .asFloatBuffer().put(TEX_VERTEX);
+        mTexVertexBuffer.position(0);
+
+        mVertexIndexBuffer=ByteBuffer.allocateDirect(VERTEX_INDEX.length *2).order(ByteOrder.nativeOrder())
+                .asShortBuffer().put(VERTEX_INDEX);
+        mVertexIndexBuffer.position(0);
+    }
+
+    private void setCameraDisplayOrientation(int cameraId, Camera camera){
+        Activity targetActivity=(Activity)mGLSurfaceView.getContext();
+        Camera.CameraInfo info=new Camera.CameraInfo();
+        Camera.getCameraInfo(cameraId, info);
+
+        int rotation=targetActivity.getWindowManager().getDefaultDisplay().getRotation();
+        int degrees=0;
+        switch(rotation){
+            case Surface.ROTATION_0:
+                degrees=0;
+                break;
+            case Surface.ROTATION_90:
+                degrees=90;
+                break;
+            case Surface.ROTATION_180:
+                degrees=180;
+                break;
+            case Surface.ROTATION_270:
+                degrees=270;
+                break;
+        }
+
+        int result;
+        if(info.facing==Camera.CameraInfo.CAMERA_FACING_FRONT){
+            result=(info.orientation+degrees)%360;
+            result=(360-result)%360;
+        }else{
+            result=(info.orientation-degrees+360)%360;
+        }
+        camera.setDisplayOrientation(result);
+    }
 }
