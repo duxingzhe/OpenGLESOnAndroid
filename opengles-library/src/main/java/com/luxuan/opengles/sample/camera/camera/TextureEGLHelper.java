@@ -138,4 +138,34 @@ public class TextureEGLHelper extends HandlerThread implements SurfaceTexture.On
     public void onSurfaceChanged(int width, int height){
         mTextureRenderer.onSurfaceChanged(width, height);
     }
+
+    private void drawFrame(){
+        if(mTextureRenderer!=null){
+            EGL14.eglMakeCurrent(mEGLDisplay, mEglSurface, mEglSurface, mEglContext);
+            mTextureRenderer.onDrawFrame(mOESSurfaceTexture);
+            EGL14.eglSwapBuffers(mEGLDisplay, mEglSurface);
+        }
+    }
+
+    @Override
+    public void onFrameAvailable(SurfaceTexture surfaceTexture){
+        if(mHandler!=null){
+            mHandler.sendEmptyMessage(EGLMessage.MSG_RENDER);
+        }
+    }
+
+    public SurfaceTexture loadOESTexture(){
+        mOESSurfaceTexture=new SurfaceTexture(mOESTextureId);
+        mOESSurfaceTexture.setOnFrameAvaiableListner(this);
+        return mOESSurfaceTexture;
+    }
+
+    public void onDestroy(){
+        if(mHandlerThread!=null){
+            mHandlerThread.quitSafely();
+        }
+        if(mHandler!=null){
+            mHandler.removeCallbacksAndMessages(null);
+        }
+    }
 }
