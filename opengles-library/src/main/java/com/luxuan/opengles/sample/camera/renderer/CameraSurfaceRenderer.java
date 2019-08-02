@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.opengl.GLES11Ext;
+import android.opengl.GLES20;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.view.Surface;
@@ -12,6 +13,7 @@ import com.luxuan.opengles.library.R;
 import com.luxuan.opengles.library.utils.ResReadUtils;
 import com.luxuan.opengles.library.utils.ShaderUtils;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -74,7 +76,7 @@ public class CameraSurfaceRenderer implements GLSurfaceView.Renderer{
 
     private Camera mCamera;
 
-    private SurfaceTexture mSurfaceTexutre;
+    private SurfaceTexture mSurfaceTexture;
 
     private int uTextureMatrixLocation;
 
@@ -163,11 +165,54 @@ public class CameraSurfaceRenderer implements GLSurfaceView.Renderer{
 
         textureId=loadTexture();
 
-        loadSurfaceTexture(texutreId);
+        loadSurfaceTexture(textureId);
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height){
         GLES30.glViewport( 0, 0, width, height);
+    }
+
+    @Override
+    public void onDrawFrame(GL10 gl){
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
+
+        GLES30.glUseProgram(mProgram);
+
+        mSurfaceTexture.updateTexImage();
+        mSurfaceTexture.getTransformMatrix(transformatMatrix);
+
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
+        GLES30.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, textureId);
+        GLES30.glUniform1i(uTextureSamplerLocation, 0);
+
+        GLES30.glUniformMatrix4fv(uTextureMatrixLocation, 1, false, transformatMatrix, 0);
+        GLES30.glEnableVertexAttribArray(0);
+        GLES30.glVertexAttribPointer(0,3, GLES30.GL_FLOAT, false, 0, vertexBuffer);
+
+        GLES30.glEnableVertexAttribArray(1);
+        GLES30.glVertexAttribPointer(1,2,GLES30.GL_FLOAT, false, 0, mVertexIndexBuffer);
+
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, VERTEX_INDEX.length, GLES20.GL_UNSIGNED_SHORT, mVertexIndexBuffer);
+    }
+
+    public boolean loadSurfaceTexture(int textureId){
+
+        mSurfaceTexture=new SurfaceTexture(textureId);
+        mSurfaceTexture.setOnFrameAvailableListener(new SurfaceTexture.OnFrameAvailableListener(){
+            @Override
+            public void onFrameAvailable(SurfaceTexture surfaceTexture){
+                mGLSurfaceView.requestRender();
+            }
+        });
+
+        try{
+            mCamera.setPreviewTexture(mSurfaceTexture);
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
+        mCamera.startPreview();
+        return true;
     }
 }
