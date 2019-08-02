@@ -1,7 +1,14 @@
 package com.luxuan.opengles.sample.camera.renderer;
 
+import android.opengl.GLES30;
+
+import com.luxuan.opengles.library.R;
+import com.luxuan.opengles.library.utils.ResReadUtils;
+import com.luxuan.opengles.library.utils.ShaderUtils;
 import com.luxuan.opengles.sample.camera.api.ITextureRenderer;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 public class CameraTextureRenderer implements ITextureRenderer {
@@ -40,4 +47,30 @@ public class CameraTextureRenderer implements ITextureRenderer {
     };
 
     private float[] transformMatrix=new float[16];
+
+    public CameraTextureRenderer(int OESTextureId){
+        mOESTexture=OESTextureId;
+        mVertexBuffer=loadVertexBuffer(VERTEX_DATA);
+    }
+
+    public FloatBuffer loadVertexBuffer(float[] vertexData){
+        FloatBuffer buffer= ByteBuffer.allocateDirect(vertexData.length * 4).order(ByteOrder.nativeOrder())
+                .asFloatBuffer();
+
+        buffer.put(vertexData, 0, vertexData.length).position(0);
+        return buffer;
+    }
+
+    @Override
+    public void onSurfaceCreated(){
+        final int vertexShader= ShaderUtils.compileVertexShader(ResReadUtils.readResource(R.raw.vertex_texture_shader));
+        final int fragmentShader= ShaderUtils.compileFragmentShader(ResReadUtils.readResource(R.raw.fragment_texture_shader));
+
+        mShaderProgram=ShaderUtils.linkProgram(vertexShader, fragmentShader);
+
+        aPositionLocation= GLES30.glGetAttribLocation(mShaderProgram, CameraTextureRenderer.POSITION_ATTRIBUTE);
+        aTextureCoordLocation= GLES30.glGetAttribLocation(mShaderProgram, CameraTextureRenderer.TEXTURE_COORD_ATTRIBUTE);
+        uTextureMatrixLocation= GLES30.glGetUniformLocation(mShaderProgram, CameraTextureRenderer.TEXTURE_MATRIX_UNIFORM);
+        uTextureSamplerLocation=GLES30.glGetUniformLocation(mShaderProgram, CameraTextureRenderer.TEXTURE_SAMPLER_UNIFORM);
+    }
 }
