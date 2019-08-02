@@ -3,13 +3,22 @@ package com.luxuan.opengles.sample.camera.renderer;
 import android.app.Activity;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
+import android.opengl.GLES11Ext;
+import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.view.Surface;
+
+import com.luxuan.opengles.library.R;
+import com.luxuan.opengles.library.utils.ResReadUtils;
+import com.luxuan.opengles.library.utils.ShaderUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
 
 public class CameraSurfaceRenderer implements GLSurfaceView.Renderer{
 
@@ -121,5 +130,44 @@ public class CameraSurfaceRenderer implements GLSurfaceView.Renderer{
             result=(info.orientation-degrees+360)%360;
         }
         camera.setDisplayOrientation(result);
+    }
+
+    public int loadTexture(){
+        int[] tex=new int[1];
+
+        GLES30.glGenTextures(1, tex, 0);
+        GLES30.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, tex[0]);
+
+        GLES30.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_NEAREST);
+        GLES30.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR);
+        GLES30.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_CLAMP_TO_EDGE);
+        GLES30.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_CLAMP_TO_EDGE);
+
+        GLES30.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 0);
+
+        return tex[0];
+    }
+
+    @Override
+    public void onSurfaceCreated(GL10 gl, EGLConfig config){
+
+        GLES30.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+
+        final int vertexShaderId= ShaderUtils.compileVertexShader(ResReadUtils.readResource(R.raw.vertex_camera_shader));
+        final int fragmentShaderId=ShaderUtils.compileFragmentShader(ResReadUtils.readResource(R.raw.fragment_camera_shader));
+
+        mProgram=ShaderUtils.linkProgram(vertexShaderId, fragmentShaderId);
+
+        uTextureMatrixLocation=GLES30.glGetUniformLocation(mProgram, "uTextureMatrix");
+        uTextureSamplerLocation=GLES30.glGetUniformLocation(mProgram, "yuvTexSampler");
+
+        textureId=loadTexture();
+
+        loadSurfaceTexture(texutreId);
+    }
+
+    @Override
+    public void onSurfaceChanged(GL10 gl, int width, int height){
+        GLES30.glViewport( 0, 0, width, height);
     }
 }
