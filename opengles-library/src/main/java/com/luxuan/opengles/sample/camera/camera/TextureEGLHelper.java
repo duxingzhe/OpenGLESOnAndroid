@@ -13,6 +13,8 @@ import android.os.Message;
 import android.support.annotation.IntDef;
 import android.view.TextureView;
 
+import com.luxuan.opengles.sample.camera.renderer.CameraTextureRenderer;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -113,7 +115,7 @@ public class TextureEGLHelper extends HandlerThread implements SurfaceTexture.On
         }
         SurfaceTexture surfaceTexture=mTextureView.getSurfaceTexture();
         if(surfaceTexture==null){
-            throw new RuntimeException("surfaceTexture is null"0);
+            throw new RuntimeException("surfaceTexture is null");
         }
 
         final int[] surfaceAttributes={EGL14.EGL_NONE};
@@ -141,7 +143,7 @@ public class TextureEGLHelper extends HandlerThread implements SurfaceTexture.On
 
     private void drawFrame(){
         if(mTextureRenderer!=null){
-            EGL14.eglMakeCurrent(mEGLDisplay, mEglSurface, mEglSurface, mEglContext);
+            EGL14.eglMakeCurrent(mEGLDisplay, mEglSurface, mEglSurface, mEGLContext);
             mTextureRenderer.onDrawFrame(mOESSurfaceTexture);
             EGL14.eglSwapBuffers(mEGLDisplay, mEglSurface);
         }
@@ -156,7 +158,7 @@ public class TextureEGLHelper extends HandlerThread implements SurfaceTexture.On
 
     public SurfaceTexture loadOESTexture(){
         mOESSurfaceTexture=new SurfaceTexture(mOESTextureId);
-        mOESSurfaceTexture.setOnFrameAvaiableListner(this);
+        mOESSurfaceTexture.setOnFrameAvailableListener(this);
         return mOESSurfaceTexture;
     }
 
