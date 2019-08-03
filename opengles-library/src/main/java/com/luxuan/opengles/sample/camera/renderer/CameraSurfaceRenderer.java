@@ -191,7 +191,7 @@ public class CameraSurfaceRenderer implements GLSurfaceView.Renderer{
         GLES30.glVertexAttribPointer(0,3, GLES30.GL_FLOAT, false, 0, vertexBuffer);
 
         GLES30.glEnableVertexAttribArray(1);
-        GLES30.glVertexAttribPointer(1,2,GLES30.GL_FLOAT, false, 0, mVertexIndexBuffer);
+        GLES30.glVertexAttribPointer(1,2,GLES30.GL_FLOAT, false, 0, mTexVertexBuffer);
 
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, VERTEX_INDEX.length, GLES20.GL_UNSIGNED_SHORT, mVertexIndexBuffer);
     }
@@ -210,6 +210,7 @@ public class CameraSurfaceRenderer implements GLSurfaceView.Renderer{
             mCamera.setPreviewTexture(mSurfaceTexture);
         }catch(IOException e){
             e.printStackTrace();
+            return false;
         }
 
         mCamera.startPreview();
