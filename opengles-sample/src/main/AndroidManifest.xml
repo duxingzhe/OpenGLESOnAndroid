@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.luxuan.opengles">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <uses-feature
         android:glEsVersion="0x00030000"
         android:required="true" />
@@ -23,6 +26,14 @@
         </activity>
 
         <activity android:name=".Activity.SimpleActivity" />
+
+        <activity
+            android:name=".Activity.CameraSurfaceActivity"
+            android:theme="@style/AppFullScreenTheme" />
+
+        <activity
+            android:name=".Activity.CameraTextureActivity"
+            android:theme="@style/AppFullScreenTheme" />
     </application>
 
 </manifest>

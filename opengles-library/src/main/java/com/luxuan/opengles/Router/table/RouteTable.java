@@ -1,6 +1,6 @@
 package com.luxuan.opengles.Router.table;
 
-public interface RouterTable {
+public interface RouteTable {
 
     String PAGE_BASIS="/basis/page_basis";
 

@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.luxuan.opengles.Router.router.PageRouter;
-import com.luxuan.opengles.Router.table.RouterTable;
+import com.luxuan.opengles.Router.table.RouteTable;
 
 public class PageRouterImpl extends PageRouter {
 
@@ -17,7 +17,7 @@ public class PageRouterImpl extends PageRouter {
 
     @Override
     public void routeBasisPage(){
-        ARouter.getInstance().build(RouterTable.PAGE_BASIS).navigation();
+        ARouter.getInstance().build(RouteTable.PAGE_BASIS).navigation();
     }
 
     @Override

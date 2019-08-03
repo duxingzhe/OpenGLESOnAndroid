@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.luxuan.opengles.Router.router.PageRouter;
+import com.luxuan.opengles.Router.table.RouteTable;
 
 public class MainActivity extends Activity {
 
@@ -16,5 +17,9 @@ public class MainActivity extends Activity {
 
     public void onBasisClick(View view){
         PageRouter.getInstance().routeBasisPage();
+    }
+
+    public void onCameraClick(View view){
+        PageRouter.getInstance().routePage(RouteTable.PAGE_CAMERA);
     }
 }
