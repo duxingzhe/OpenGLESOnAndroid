@@ -1,6 +1,8 @@
 package com.luxuan.opengles.sample.filter.filter;
 
+import android.opengl.GLES20;
 import android.opengl.GLES30;
+import android.opengl.Matrix;
 
 import com.luxuan.opengles.library.R;
 import com.luxuan.opengles.library.core.AppCore;
@@ -62,7 +64,7 @@ public abstract class BaseFilter implements RendererFilter {
 
     private int uMatrixLocation;
 
-    private float[] Matrix=new float[16];
+    private float[] mMatrix=new float[16];
 
     private String mVertexShader;
 
@@ -106,6 +108,55 @@ public abstract class BaseFilter implements RendererFilter {
         textureId= TextureUtils.loadTexture(AppCore.getInstance().getContext(), R.drawable.main);
 
         LogUtils.d(TAG, "program=%d matrixLocation=%d textureId=%d", mProgram, uMatrixLocation, textureId);
+    }
+
+    @Override
+    public final void onSurfaceCreated(){
+        GLES30.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+        setupProgram();
+    }
+
+    @Override
+    public final void onSurfaceChanged(int width, int height){
+        GLES30.glViewport(0, 0, width, height);
+
+        final float aspectRatio=width>height? (float)width/(float)height:
+                (float)height/(float)width;
+        if(width>height){
+            Matrix.orthoM(mMatrix, 0, -aspectRatio, aspectRatio, -1f, 1f, -1f, 1f);
+        }else{
+            Matrix.orthoM(mMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio,-1f, 1f);
+        }
+    }
+
+    @Override
+    public void onDrawFrame(){
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
+
+        GLES30.glUseProgram(mProgram);
+
+        onUpdateDrawFrame();
+
+        GLES30.glUniformMatrix4fv(uMatrixLocation, 1, false, mMatrix, 0);
+
+        GLES30.glEnableVertexAttribArray(0);
+        GLES30.glVertexAttribPointer(0, 3, GLES30.GL_FLOAT, false, 0, vertexBuffer);
+
+        GLES30.glEnableVertexAttribArray(1);
+        GLES30.glVertexAttribPointer( 1, 2, GLES30.GL_FLOAT, false, 0, mTextVertexBuffer);
+
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textureId);
+
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, VERTEX_INDEX.length, GLES20.GL_UNSIGNED_SHORT, mVertexIndexBuffer);
+    }
+
+    public void onUpdateDrawFrame(){
+
+    }
+
+    @Override
+    public void onDestroy(){
+        GLES30.glDeleteProgram(mProgram);
     }
 
 }

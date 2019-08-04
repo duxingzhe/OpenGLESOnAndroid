@@ -2,7 +2,7 @@ package com.luxuan.opengles.sample.filter.filter;
 
 public interface RendererFilter {
 
-    void onSurfacecreated();
+    void onSurfaceCreated();
 
     void onSurfaceChanged(int width, int height);
 
