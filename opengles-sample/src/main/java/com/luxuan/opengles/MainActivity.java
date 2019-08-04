@@ -19,6 +19,10 @@ public class MainActivity extends Activity {
         PageRouter.getInstance().routeBasisPage();
     }
 
+    public void onColorClick(View view) {
+        PageRouter.getInstance().routePage(RouteTable.PAGE_COLOR);
+    }
+
     public void onCameraClick(View view){
         PageRouter.getInstance().routePage(RouteTable.PAGE_CAMERA);
     }

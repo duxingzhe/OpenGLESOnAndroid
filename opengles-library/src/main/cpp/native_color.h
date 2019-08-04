@@ -19,5 +19,6 @@ JNIEXPORT void JNICALL onDrawFrame(JNIEnv *, jobject);
 
 #ifdef __cplusplus
 }
+#endif
 
 #endif //OPENGLESONANDROID_NATIVE_COLOR_H

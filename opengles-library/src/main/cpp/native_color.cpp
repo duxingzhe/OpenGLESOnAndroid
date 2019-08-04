@@ -2,13 +2,9 @@
 // Created by Luxuan on 2019/8/4.
 //
 
-#include "native_color.h"
-
-
 #include <jni.h>
 #include <EGL/egl.h>
 #include <GLES3/gl3.h>
-
 #include "native_color.h"
 
 /**
@@ -52,18 +48,18 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
 }
 
 JNIEXPORT void JNICALL surfaceCreated(JNIEnv *env, jobject obj, jint color) {
-GLfloat redF = ((color >> 16) & 0xFF) * 1.0f / 255;
-GLfloat greenF = ((color >> 8) & 0xFF) * 1.0f / 255;
-GLfloat blueF = (color & 0xFF) * 1.0f / 255;
-GLfloat alphaF = ((color >> 24) & 0xFF) * 1.0f / 255;
-glClearColor(redF, greenF, blueF, alphaF);
+    GLfloat redF = ((color >> 16) & 0xFF) * 1.0f / 255;
+    GLfloat greenF = ((color >> 8) & 0xFF) * 1.0f / 255;
+    GLfloat blueF = (color & 0xFF) * 1.0f / 255;
+    GLfloat alphaF = ((color >> 24) & 0xFF) * 1.0f / 255;
+    glClearColor(redF, greenF, blueF, alphaF);
 }
 
 JNIEXPORT void JNICALL surfaceChanged(JNIEnv *env, jobject obj, jint width, jint height) {
-glViewport(0, 0, width, height);
+    glViewport(0, 0, width, height);
 }
 
 JNIEXPORT void JNICALL onDrawFrame(JNIEnv *env, jobject obj) {
-//把颜色缓冲区设置为我们预设的颜色
-glClear(GL_COLOR_BUFFER_BIT);
+    //把颜色缓冲区设置为我们预设的颜色
+    glClear(GL_COLOR_BUFFER_BIT);
 }
