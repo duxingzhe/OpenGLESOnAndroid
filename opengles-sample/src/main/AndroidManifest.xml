@@ -34,6 +34,8 @@
         <activity
             android:name=".Activity.CameraTextureActivity"
             android:theme="@style/AppFullScreenTheme" />
+
+        <activity android:name=".Activity.ColorActivity" />
     </application>
 
 </manifest>
