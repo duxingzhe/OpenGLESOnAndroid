@@ -27,6 +27,13 @@ public class LogUtils {
         }
     }
 
+    public static void d(String tag, String content, Object... args){
+        if(args!=null&&args.length>0){
+            final String msg=String.format(content, args);
+            Log.d(tag, msg);
+        }
+    }
+
     public static void v(String tag, Object content){
         Log.v(tag, String.valueOf(content));
     }
