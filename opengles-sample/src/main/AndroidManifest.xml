@@ -36,6 +36,8 @@
             android:theme="@style/AppFullScreenTheme" />
 
         <activity android:name=".Activity.ColorActivity" />
+        <activity android:name=".Activity.FilterActivity"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

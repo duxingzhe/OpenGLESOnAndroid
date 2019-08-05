@@ -1,6 +1,6 @@
 package com.luxuan.opengles.library.base;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 
-public abstract class AbstractBaseActivity extends Activity {
+public abstract class AbstractBaseActivity extends AppCompatActivity {
 }

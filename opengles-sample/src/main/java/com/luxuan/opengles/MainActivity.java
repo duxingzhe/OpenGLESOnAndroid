@@ -1,13 +1,13 @@
 package com.luxuan.opengles;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
 import com.luxuan.opengles.Router.router.PageRouter;
 import com.luxuan.opengles.Router.table.RouteTable;
+import com.luxuan.opengles.library.base.AbstractBaseActivity;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AbstractBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,5 +25,9 @@ public class MainActivity extends Activity {
 
     public void onCameraClick(View view){
         PageRouter.getInstance().routePage(RouteTable.PAGE_CAMERA);
+    }
+
+    public void onFilterClick(View view){
+        PageRouter.getInstance().routePage(RouteTable.PAGE_FILTER);
     }
 }
