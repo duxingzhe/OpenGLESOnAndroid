@@ -107,3 +107,71 @@ void drawColor(JNIEnv *env, jobject obj, jobject surface, jint colorARGB)
 
     ANativeWindow_release(window);
 }
+
+void drawBitmap(JNIEnv *env, jobject obj, jobject surface, jobject bitmap)
+{
+    AndroidBitmapInfo info;
+    if(AndroidBitmap_getInfo(env,bitmap, &info)<0)
+    {
+        ThrowException(env, "java/lang/RuntimeException", "unable to get bitmap info");
+        return;
+    }
+
+    char *data=NULL;
+
+    if(AndroidBitmap_lockPixels(env, bitmap, (void **)&data)<0)
+    {
+        ThrowException(env, "java/lang/RuntimeException", "unable to lock pixels");
+        return;
+    }
+
+    if(AndroidBitmap_unlockPixels(env, bitmap)<0)
+    {
+        ThrowException(env, "java/lang/RuntimeException", "unable to unlock pixels");
+        return;
+    }
+
+    ANativeWindow *window=ANativeWindow_fromSurface(env, surface);
+    if(NULL==window)
+    {
+        ThrowException(env, "java/lang/RuntimeException", "unable to get native window");
+        return;
+    }
+
+    int32_t result=ANativeWindow_setBuffersGeometry(window, info.width, info.height, WINDOW_FORMAT_RGBA_8888);
+
+    if(result<0)
+    {
+        ThrowException(env, "java/lang/RuntimeException", "unable to set buffers geometry");
+        ANativeWindow_release(window);
+        window=NULL;
+        return;
+    }
+    ANativeWindow_acquire(window);
+
+    ANativeWindow_Buffer buffer;
+    if(ANativeWindow_lock(window, &buffer, NULL)<0)
+    {
+        ThrowException(env, "java/lang/RuntimeException", "unable to lock native window");
+        ANativeWindow_release(window);
+        window=NULL;
+        return;
+    }
+
+    int32_t *bitmapPixels=(int32_t *)data;
+    uint32_t *line=(uint32_t *)buffer.bits;
+    for(int y=0;y<buffer.height;y++)
+    {
+        for(int x=0;x<buffer.width;x++)
+        {
+            line[x]=bitmapPixels[buffer.height*y+x];
+        }
+        line=line+buffer.stride;
+    }
+
+    if(ANativeWindow_unlockAndPost(window)<0)
+    {
+        ThrowException(env, "java/lang/RuntimeException", "unable to unlock and post to native widnow");
+    }
+    ANativeWindow_release(window);
+}
