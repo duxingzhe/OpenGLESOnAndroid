@@ -14,7 +14,6 @@ JNIEXPORT void JNICALL drawColor(JNIEnv * , jobject , jobject , jint ) ;
 JNIEXPORT void JNICALL drawBitmap(JNIEnv * , jobject , jobject , jobject) ;
 
 #ifdef __cplusplus
-extern "C"
 }
 #endif
 
