@@ -23,6 +23,10 @@ public class MainActivity extends AbstractBaseActivity {
         PageRouter.getInstance().routePage(RouteTable.PAGE_COLOR);
     }
 
+    public void onNativeClick(View view) {
+        PageRouter.getInstance().routePage(RouteTable.PAGE_NATIVE);
+    }
+
     public void onCameraClick(View view){
         PageRouter.getInstance().routePage(RouteTable.PAGE_CAMERA);
     }
