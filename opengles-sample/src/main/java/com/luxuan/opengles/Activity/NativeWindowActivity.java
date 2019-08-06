@@ -40,8 +40,8 @@ public class NativeWindowActivity extends AbstractBaseActivity {
 
     private void setupView(){
         mRootLayer=(ViewGroup)findViewById(R.id.root_layer);
-        mBtnColor=(Button)findViewById(R.id.btn_draw_bitmap);
-        mBtnColor=(Button)findViewById(R.id.btn_draw_bitmap);
+        mBtnColor=(Button)findViewById(R.id.btn_draw_color);
+        mBtnBitmap=(Button)findViewById(R.id.btn_draw_bitmap);
         mSurfaceView=new SurfaceView(this);
         mRootLayer.addView(mSurfaceView);
         mSurfaceView.getHolder().addCallback(new SurfaceHolder.Callback(){

@@ -35,8 +35,6 @@ add_library(native-window
         )
 
 target_link_libraries(native-window
-        ${OPENGL_LIB}
         android
-        EGL
-        log
-        m)
+        jnigraphics
+        log)
