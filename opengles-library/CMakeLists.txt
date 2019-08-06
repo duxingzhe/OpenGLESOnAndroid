@@ -28,3 +28,15 @@ target_link_libraries(native-color
             EGL
             log
             m)
+
+add_library(native-window
+        SHARED
+        src/main/cpp/native_window.cpp
+        )
+
+target_link_libraries(native-window
+        ${OPENGL_LIB}
+        android
+        EGL
+        log
+        m)
