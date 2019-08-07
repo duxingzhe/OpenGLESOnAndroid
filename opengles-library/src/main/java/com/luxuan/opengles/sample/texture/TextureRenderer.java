@@ -1,11 +1,23 @@
 package com.luxuan.opengles.sample.texture;
 
+import android.opengl.GLES20;
+import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
+import android.opengl.Matrix;
+
+import com.luxuan.opengles.library.R;
+import com.luxuan.opengles.library.core.AppCore;
+import com.luxuan.opengles.library.utils.ResReadUtils;
+import com.luxuan.opengles.library.utils.ShaderUtils;
+import com.luxuan.opengles.library.utils.TextureUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
 
 public class TextureRenderer implements GLSurfaceView.Renderer {
 
@@ -70,5 +82,50 @@ public class TextureRenderer implements GLSurfaceView.Renderer {
         mVertexIndexBuffer=ByteBuffer.allocateDirect(VERTEX_INDEX.length*4).order(ByteOrder.nativeOrder())
                 .asShortBuffer().put(VERTEX_INDEX);
         mVertexIndexBuffer.position(0);
+    }
+
+    @Override
+    public void onSurfaceCreated(GL10 gl, EGLConfig config){
+        GLES30.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+
+        final int vertexShaderId= ShaderUtils.compileVertexShader(ResReadUtils.readResource(R.raw.vertex_example_texture_shader));
+        final int fragmentShaderId=ShaderUtils.compileFragmentShader(ResReadUtils.readResource(R.raw.fragment_example_texture_shader));
+
+        mProgram=ShaderUtils.linkProgram(vertexShaderId, fragmentShaderId);
+        uMatrixLocation=GLES30.glGetUniformLocation(mProgram, "u_Matrix");
+
+        textureId= TextureUtils.loadTexture(AppCore.getInstance().getContext(), R.drawable.main);
+    }
+
+    @Override
+    public void onSurfaceChanged(GL10 gl, int width, int height){
+        GLES30.glViewport(0, 0, width,height);
+
+        final float aspectRatio=width>height?(float)width/(float)height:
+                (float)height/(float)width;
+        if(width>height){
+            Matrix.orthoM(mMatrix, 0, -aspectRatio, aspectRatio, -1, 1f, -1f, 1f);
+        }else{
+            Matrix.orthoM(mMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f);
+        }
+    }
+
+    @Override
+    public void onDrawFrame(GL10 gl){
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
+
+        GLES30.glUseProgram(mProgram);
+        GLES30.glUniformMatrix4fv(uMatrixLocation, 1, false, mMatrix, 0);
+
+        GLES30.glEnableVertexAttribArray(0);
+        GLES30.glVertexAttribPointer(0,3,GLES30.GL_FLOAT, false, 0, vertexBuffer);
+
+        GLES30.glEnableVertexAttribArray(1);
+        GLES30.glVertexAttribPointer(1, 2, GLES30.GL_FLOAT, false, 0, vertexBuffer);
+
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textureId);
+
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, VERTEX_INDEX.length, GLES20.GL_UNSIGNED_SHORT, mVertexIndexBuffer);
     }
 }
