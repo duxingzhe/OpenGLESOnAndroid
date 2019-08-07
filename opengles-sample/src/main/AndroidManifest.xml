@@ -39,6 +39,8 @@
         <activity android:name=".Activity.FilterActivity"/>
 
         <activity android:name=".Activity.NativeWindowActivity" />
+        <activity android:name=".Activity.TextureActivity" />
+
     </application>
 
 </manifest>

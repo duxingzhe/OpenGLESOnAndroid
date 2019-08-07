@@ -27,6 +27,10 @@ public class MainActivity extends AbstractBaseActivity {
         PageRouter.getInstance().routePage(RouteTable.PAGE_NATIVE);
     }
 
+    public void onTextureClick(View view) {
+        PageRouter.getInstance().routePage(RouteTable.PAGE_TEXTURE);
+    }
+
     public void onCameraClick(View view){
         PageRouter.getInstance().routePage(RouteTable.PAGE_CAMERA);
     }
